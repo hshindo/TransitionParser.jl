@@ -1,14 +1,9 @@
-type BeamSearch
-  size::Int
-end
-
 """
 Requirements of T:
   member: score
   member: step
 """
-# `state` must have a function: expand and a variable: score"
-function decode{T}(bs::BeamSearch, expand::Function, initstate::T)
+function beamsearch{T}(beamsize::Int, expand::Function, initstate::T)
   chart = Vector{T}[]
   push!(chart, [initstate])
   lessthan(x::T, y::T) = y.score - x.score
@@ -16,8 +11,8 @@ function decode{T}(bs::BeamSearch, expand::Function, initstate::T)
   i = 1
   while i <= length(chart)
     states = chart[i]
-    length(states) > bs.size && sort!(states, lt=lessthan)
-    for j = 1:min(length(states), bs.size)
+    length(states) > beamsize && sort!(states, lt=lessthan)
+    for j = 1:min(beamsize, length(states))
       for s in expand(states[j])
         while s.step > length(chart)
           push!(chart, T[])
