@@ -1,71 +1,61 @@
 module TransitionParser
 
-export beamsearch, find_nbest, train
+export beamsearch, max_violation
 
 """
 Requirements of T:
   member: score
   member: step
 """
-function beamsearch{T}(beamsize::Int, expand::Function, initstate::T)
+function beamsearch{T}(initstate::T, beamsize::Int, expand::Function)
   chart = Vector{T}[]
   push!(chart, [initstate])
   lessthan(x::T, y::T) = y.score - x.score
 
-  i = 1
-  while i <= length(chart)
-    states = chart[i]
+  k = 1
+  while k <= length(chart)
+    states = chart[k]
     length(states) > beamsize && sort!(states, lt=lessthan)
-    for j = 1:min(beamsize, length(states))
-      for s in expand(states[j])
+    for i = 1:min(beamsize, length(states))
+      for s in expand(states[i])
         while s.step > length(chart)
           push!(chart, T[])
         end
         push!(chart[s.step], s)
       end
     end
-    i += 1
+    k += 1
   end
   chart
 end
 
-find_nbest(chart, n::Int) = chart[end][1:n]
-
-function toseq{T}(state::T)
+"""
+Requirements of T:
+  member: prev
+"""
+function to_seq{T}(finalstate::T)
   seq = T[]
-  s = state
+  s = finalstate
   while s != nothing
     push!(seq, s)
     s = s.prev
   end
+  reverse!(seq)
   seq
 end
 
-function train{T}(data::Vector{T}, decode_gold, decode_pred, train_gold, train_pred)
-  preds = Array(T, length(data))
-  for i in randperm(length(data))
-    s = data[i]
-    chart_g = decode_gold(s)
-    chart_p = decode_pred(s)
-    preds[i] = find_nbest(chart_p, 1)
-
-    # max-violation training
-    # L. Huang et al. "Structured Perceptron with Inexact Search", ACL 2012
-    goldseq, predseq = toseq(gold), toseq(pred)
-    maxk, maxv = 1, predseq[1].score
-    for k = 1:length(golds)
-      v = predseq[k].score - goldseq[k].score
-      if v > maxv
-        maxk = k
-        maxv = v
-      end
-    end
-    for k = 1:maxk
-      train_gold(goldseq[k])
-      train_pred(goldseq[k])
+"L. Huang et al. \"Structured Perceptron with Inexact Seatch\", ACL 2012"
+function max_violation(gold, pred)
+  goldseq, predseq = to_seq(gold), to_seq(pred)
+  maxk, maxv = 1, 0.0
+  for k = 1:length(golds)
+    v = predseq[k].score - goldseq[k].score
+    if v > maxv
+      maxk = k
+      maxv = v
     end
   end
-  preds
+  maxk
 end
 
 end
