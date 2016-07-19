@@ -1,3 +1,5 @@
+export accuracy
+
 function accuracy(golds::Vector{Int}, preds::Vector{Int})
   @assert length(golds) == length(preds)
   correct = 0
