@@ -1,7 +1,7 @@
 # TransitionParser.jl
 
-[![Build Status](https://travis-ci.org/hshindo/JukaiNLP.jl.svg?branch=master)](https://travis-ci.org/hshindo/JukaiNLP.jl)
-[![Build status](https://ci.appveyor.com/api/projects/status/github/hshindo/JukaiNLP.jl?branch=master)](https://ci.appveyor.com/project/hshindo/jukaiNLP-jl/branch/master)
+[![Build Status](https://travis-ci.org/hshindo/TransitionParser.jl.svg?branch=master)](https://travis-ci.org/hshindo/TransitionParser.jl)
+[![Build status](https://ci.appveyor.com/api/projects/status/github/hshindo/TransitionParser.jl?branch=master)](https://ci.appveyor.com/project/hshindo/TransitionParser-jl/branch/master)
 
 A transition-based parser in [Julia](http://julialang.org/).
 
