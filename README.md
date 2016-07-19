@@ -10,3 +10,5 @@ A transition-based parser in [Julia](http://julialang.org/).
 julia> Pkg.clone("https://github.com/hshindo/TransitionParser.jl.git")
 julia> Pkg.update()
 ```
+
+## Usage
