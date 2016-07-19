@@ -1,5 +1,4 @@
-push!(LOAD_PATH, joinpath(dirname(@__FILE__), "../.."))
-workspace()
-using TransitionParser
 using Base.Test
+using TransitionParser
 
+@test 1 == 1
