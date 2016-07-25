@@ -1,6 +1,6 @@
 export accuracy
 
-function accuracy(golds::Vector{Int}, preds::Vector{Int})
+function accuracy(golds::Vector{Int}, preds::Vector{Int}; ignores=[])
   @assert length(golds) == length(preds)
   correct = 0
   total = 0

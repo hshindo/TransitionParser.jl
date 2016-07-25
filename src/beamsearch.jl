@@ -27,7 +27,7 @@ function beamsearch{T}(initstate::T, beamsize::Int, expand::Function)
         k += 1
     end
     sort!(chart[end], lt=lessthan)
-    chart[end][1]
+    chart
 end
 
 function to_seq{T}(finalstate::T)
