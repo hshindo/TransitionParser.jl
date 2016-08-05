@@ -57,7 +57,6 @@ function max_violation!{T}(gold::T, pred::T, train_gold, train_pred)
             maxv = v
         end
     end
-    # println("maxk: $(maxk) of $(length(goldseq))")
     for k = 2:maxk
         train_gold(goldseq[k])
         train_pred(predseq[k])
