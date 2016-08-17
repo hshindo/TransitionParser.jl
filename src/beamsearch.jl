@@ -1,9 +1,9 @@
 export beamsearch, max_violation!
 
 """
-    beamsearch
+    beamsearch(initstate, beamsize, expand)
 
-Requirements of T:
+Requirements of state:
 * member: score
 * member: step
 """
