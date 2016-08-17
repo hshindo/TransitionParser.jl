@@ -6,9 +6,9 @@
 A transition-based parser in [Julia](http://julialang.org/).
 
 A transition system is an abstract concept to describe discrete systems, which consists of `state` and `transition`.
-In natural language processing (NLP), it is often used for syntactic and semantic parsing of a sentence given some statistical model, which is called transition-based parsing.
+In natural language processing (NLP), it is often used for syntactic and semantic parsing, which is called transition-based parsing.
 
-This package basically provides search and training algorithm for transition-based parsing.
+This package provides search and training algorithm for transition-based parsing.
 
 ## Installation
 ```julia
@@ -17,9 +17,6 @@ julia> Pkg.clone("https://github.com/hshindo/TransitionParser.jl.git")
 
 ## Usage
 Define `state` and `transition` for your transition system.
-julia```
-
-```
 
 Similar to iterable objects in Julia, the following methods are required for `state`:
 * next
