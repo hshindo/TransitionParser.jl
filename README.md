@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/hshindo/TransitionParser.jl.svg?branch=master)](https://travis-ci.org/hshindo/TransitionParser.jl)
 [![Build status](https://ci.appveyor.com/api/projects/status/github/hshindo/TransitionParser.jl?branch=master)](https://ci.appveyor.com/project/hshindo/TransitionParser-jl/branch/master)
 
+<p align="center"><img src="https://github.com/hshindo/TransitionParser.jl/blob/master/TransitionParser.png" width="150"></p>
+
 A transition-based parser in [Julia](http://julialang.org/).
 
 A transition system is an abstract concept to describe discrete systems, which consists of `state` and `transition`.
