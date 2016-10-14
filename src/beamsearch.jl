@@ -1,41 +1,19 @@
-export beamsearch, max_violation!
+immutable Node{T}
+    state::T
+    score::Float64
+    prev::Node{T}
 
-"""
-    beamsearch(initstate, beamsize, expand)
-
-Requirements of state:
-* member: score
-* member: step
-"""
-function beamsearch{T}(initstate::T, beamsize::Int, expand::Function)
-    chart = Vector{T}[]
-    push!(chart, [initstate])
-    lessthan{T}(x::T, y::T) = x.score > y.score
-
-    k = 1
-    while k <= length(chart)
-        states = chart[k]
-        length(states) > beamsize && sort!(states, lt=lessthan)
-        for i = 1:min(beamsize, length(states))
-            for s in expand(states[i])
-                while s.step > length(chart)
-                    push!(chart, T[])
-                end
-                push!(chart[s.step], s)
-            end
-        end
-        k += 1
-    end
-    sort!(chart[end], lt=lessthan)
-    chart
+    Node(state, score) = new(state, score)
 end
 
-function to_seq{T}(finalstate::T)
+lessthan{T}(x::Node{T}, y::Node{T}) = x.score > y.score
+
+function getseq{T}(finalstate::T)
     seq = T[]
     s = finalstate
-    # while s != nothing
-    while s.step > 1
+    while true
         unshift!(seq, s)
+        isdefined(s,:prev) || break
         s = s.prev
     end
     unshift!(seq, s)
@@ -43,71 +21,32 @@ function to_seq{T}(finalstate::T)
 end
 
 """
-    max_violation!
-
-Ref: L. Huang et al, "Structured Perceptron with Inexact Seatch", ACL 2012.
+    beamsearch
 """
-function max_violation!{T}(gold::T, pred::T, train_gold, train_pred)
-    goldseq, predseq = to_seq(gold), to_seq(pred)
-    maxk, maxv = 1, 0.0
-    for k = 1:length(goldseq)
-        v = predseq[k].score - goldseq[k].score
-        if k == 1 || v >= maxv
-            maxk = k
-            maxv = v
-        end
-    end
-    for k = 2:maxk
-        train_gold(goldseq[k])
-        train_pred(predseq[k])
-    end
-end
+function beamsearch{T}(initstate::T, beamsize::Int, getscore)
+    chart = Vector{Node{T}}[]
+    push!(chart, [Node(initstate,0.0)])
 
-#=
-st_lessthan(x::State, y::State) = y.score < x.score
+    k = 1
+    while k <= length(chart)
+        states = chart[k]
+        length(states) > beamsize && sort!(states, lt=lessthan)
 
-function beamsearch(beamsize::Int, initstate::State, expand::Function)
-    chart = Vector{State}[[initstate]]
-    i = 1
-    while i <= length(chart)
-        states = chart[i]
-        length(states) > beamsize && sort!(states, lt=st_lessthan)
-        for j = 1:min(beamsize, length(states))
-            for s in expand(states[j])
-                while s.step > length(chart) push!(chart, []) end
-                push!(chart[s.step], s)
+        for i = 1:min(beamsize,length(states))
+            s = states[i]
+            for c::T in next(s)
+                score = getscore(c) + s.score
+                n = Node(c, score, s)
+                while c.step > length(chart)
+                    push!(chart, Node{T}[])
+                end
+                push!(chart[c.step], n)
             end
         end
-        i += 1
+        k += 1
     end
-    sort!(chart[end], lt=st_lessthan)
-    chart[end][1]
-end
 
-function state2array(s::State)
-    res = Vector{State}(s.step)
-    st = s
-    while st.step > 1
-        res[st.step] = st
-        st = st.prev
-    end
-    res[st.step] = st
-    res
+    length(chart[end]) > beamsize && deleteat!(chart[end], beamsize+1:length(chart[end]))
+    sort!(chart[end], lt=lessthan)
+    chart[end]
 end
-
-function maxviolate!(gold::State, pred::State)
-    golds = state2array(gold)
-    preds = state2array(pred)
-    maxv  = typemin(Float); maxk = 1
-    for k = 2:min(length(golds), length(preds))
-        v = preds[k].score - golds[k].score
-        if v >= maxv
-            maxv, maxk = v, k
-        end
-    end
-    for i = 2:maxk
-        traingold!(model, golds[i])
-        trainpred!(model, preds[i])
-    end
-end
-=#

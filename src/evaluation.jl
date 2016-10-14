@@ -10,3 +10,6 @@ function accuracy(golds::Vector{Int}, preds::Vector{Int}; ignores=[])
     end
     correct / total
 end
+
+function fscore()
+end

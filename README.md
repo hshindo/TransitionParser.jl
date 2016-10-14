@@ -26,12 +26,13 @@ Currently, the following members are required for `state`:
 
 For deciding, `beamsearch` function finds k-best optimal states according to your transition system.
 
+For example,
 ```julia
 using TransitionParser
 
 initstate = State()
 beamsearch(initstate, 16, expand)
 ```
-where beamsize is 16, `expand` is a function to get next states from current state.
+where beamsize is 16, `expand` is a function to get next states from the current state.
 
-See [JukaiNLP](https://github.com/hshindo/JukaiNLP.jl.git) for concrete examples.
+See [JukaiNLP](https://github.com/hshindo/JukaiNLP.jl.git) for a concrete example.
